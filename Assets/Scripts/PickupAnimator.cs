@@ -20,6 +20,7 @@ public class PickupAnimator : MonoBehaviour
 	{
 		enabled = true;
 		modelRenderer.enabled = true;
+		UpdateMeshes(true);
 		idleEffect.Play();
 	}
 
@@ -30,6 +31,7 @@ public class PickupAnimator : MonoBehaviour
 	{
 		enabled = false;
 		modelRenderer.enabled = false;
+		UpdateMeshes(false);
 		idleEffect.Stop();
 		collectEffect.Play();
 	}
@@ -39,5 +41,14 @@ public class PickupAnimator : MonoBehaviour
 		var modelTransform = modelRenderer.transform;
 		modelTransform.localPosition = new Vector3(0f, Mathf.Lerp(0.35f, 0.55f, (Mathf.Sin(Time.time * 3f) + 1f) * 0.5f), 0f);
 		modelTransform.localEulerAngles = new Vector3(0f, Time.time * 180f % 360f, 0f);
+	}
+
+	private void UpdateMeshes(bool isEnabled)
+    {
+		Renderer[] myRenderer = modelRenderer.GetComponentsInChildren<Renderer>();
+		for (int i = 0; i < myRenderer.Length; i++)
+		{
+			myRenderer[i].enabled = isEnabled;
+		}
 	}
 }
