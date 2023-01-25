@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,13 +11,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject scoreText;
 
     private int tickAmount;
+    private int collectedTally;
+
+    public delegate void GameEnd();
+    public static event GameEnd FailedState;
 
     void Start()
     {
         playerReference.GetComponent<CharacterMovement>().Init();
         PickupTrigger.IncreaseScore += UpdateScore;
+        GameEndTrigger.CompleteState += GameComplete;
 
         tickAmount = -1;
+        collectedTally = 0;
         UpdateScore(35);
         StartCoroutine(TickScore());
     }
@@ -29,8 +36,8 @@ public class GameManager : MonoBehaviour
 
     void UpdateScore(int score)
     {
+        collectedTally++;
         currentScore += score;
-        Debug.Log(currentScore);
         TMP_Text myText = scoreText.GetComponentInChildren<TMP_Text>();
         myText.text = "O2 Remaining: " + currentScore.ToString();
     }
@@ -54,6 +61,13 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        FailedState?.Invoke();
         Debug.Log("Game Over!");
+        SceneManager.LoadScene("LevelFailed", LoadSceneMode.Additive);
+    }
+
+    private void GameComplete()
+    {
+        tickAmount = 0;
     }
 }

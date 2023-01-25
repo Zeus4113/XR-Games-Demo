@@ -22,10 +22,8 @@ public class PickupTrigger : MonoBehaviour
     {
         if(other.gameObject != null)
         {
-            Debug.Log("Working");
             if (other.gameObject.CompareTag("Pickup"))
             {
-                Debug.Log("Working");
                 IncreaseScore(other.gameObject.GetComponent<Pickup>().GetPickedUp());
             }
         } 

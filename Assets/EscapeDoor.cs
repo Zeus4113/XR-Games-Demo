@@ -7,41 +7,40 @@ public class EscapeDoor : MonoBehaviour
     [SerializeField] bool isPlayerPresent;
     [SerializeField] bool isLocked;
     [SerializeField] GameObject myDoor;
+    [SerializeField] int collectedTally;
 
-    private void Update()
+    private void Start()
     {
-        if (isPlayerPresent)
-        {
-            if (!isLocked)
-            {
-                DoorOpen();
-            }
-        }
+        collectedTally = 0;
+        PickupTrigger.IncreaseScore += TallyPickups;
     }
 
-    void DoorOpen()
+    void TallyPickups(int increment)
     {
-        float myTime = 0;
-        while(myTime < 3.0f)
+        collectedTally++;
+    }
+
+    IEnumerator DoorOpen()
+    {
+        float myTime = 200f;
+        while(myTime > 0)
         {
-            myTime = +Time.deltaTime;
-            myDoor.transform.Translate(transform.up * Time.deltaTime);
+            myDoor.transform.Translate(0, -0.01f, 0);
+            myTime--;
+            yield return new WaitForSeconds(0.01f);
         }
+
+        yield return null;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            isPlayerPresent = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            isPlayerPresent = false;
+            if(collectedTally >= 5)
+            {
+                StartCoroutine(DoorOpen());
+            }
         }
     }
 }

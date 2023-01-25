@@ -6,17 +6,24 @@ public class CharacterMovement : MonoBehaviour
 {
     [SerializeField] private float m_movementSpeed;
     private GameObject m_cameraHolder;
+    private bool disableInput;
 
 
     public void Init()
     {
+        GameManager.FailedState += DisableMovement;
+        GameEndTrigger.CompleteState += DisableMovement;
         this.GetComponentInChildren<CameraHolder>().Init();
+        disableInput = false;
     }
 
     public void Run()
     {
         this.GetComponentInChildren<CameraHolder>().Run();
-        Move();
+        if (!disableInput)
+        {
+            Move();
+        }
     }
 
     public void Move()
@@ -29,5 +36,9 @@ public class CharacterMovement : MonoBehaviour
         this.transform.position += movement * m_movementSpeed * Time.deltaTime;
     }
 
+    public void DisableMovement()
+    {
+        disableInput = true;
+    }
 
 }
