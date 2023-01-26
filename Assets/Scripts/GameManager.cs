@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     private int tickAmount;
     private int collectedTally;
+    private bool m_gameOver;
 
     public delegate void GameEnd();
     public static event GameEnd FailedState;
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
         PickupTrigger.IncreaseScore += UpdateScore;
         GameEndTrigger.CompleteState += GameComplete;
 
+        m_gameOver = false;
         tickAmount = -1;
         collectedTally = 0;
         UpdateScore(35);
@@ -36,10 +38,13 @@ public class GameManager : MonoBehaviour
 
     void UpdateScore(int score)
     {
-        collectedTally++;
-        currentScore += score;
-        TMP_Text myText = scoreText.GetComponentInChildren<TMP_Text>();
-        myText.text = "O2 Remaining: " + currentScore.ToString();
+        if (!m_gameOver)
+        {
+            collectedTally++;
+            currentScore += score;
+            TMP_Text myText = scoreText.GetComponentInChildren<TMP_Text>();
+            myText.text = "O2 Remaining: " + currentScore.ToString();
+        }
     }
 
     void ResetScore()
@@ -61,6 +66,7 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        m_gameOver = true;
         FailedState?.Invoke();
         Debug.Log("Game Over!");
         SceneManager.LoadScene("LevelFailed", LoadSceneMode.Additive);

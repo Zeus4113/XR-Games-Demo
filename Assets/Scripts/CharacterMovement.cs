@@ -5,24 +5,32 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     [SerializeField] private float m_movementSpeed;
+    [SerializeField] private float m_jumpForce;
+
     private GameObject m_cameraHolder;
-    private bool disableInput;
+    private bool m_disableInput;
+    private Rigidbody m_rigidbody;
+    private bool m_isJumping;
 
 
     public void Init()
     {
+        this.GetComponentInChildren<CameraHolder>().Init();
+
+        m_rigidbody = GetComponent<Rigidbody>();
         GameManager.FailedState += DisableMovement;
         GameEndTrigger.CompleteState += DisableMovement;
-        this.GetComponentInChildren<CameraHolder>().Init();
-        disableInput = false;
+        m_disableInput = false;
     }
 
     public void Run()
     {
         this.GetComponentInChildren<CameraHolder>().Run();
-        if (!disableInput)
+
+        if (!m_disableInput)
         {
             Move();
+            Jump();
         }
     }
 
@@ -38,7 +46,24 @@ public class CharacterMovement : MonoBehaviour
 
     public void DisableMovement()
     {
-        disableInput = true;
+        m_disableInput = true;
+    }
+
+    public void Jump()
+    {
+        if (Input.GetButtonDown("Jump") && !m_isJumping)
+        {
+            m_rigidbody.AddForce(this.transform.up * m_jumpForce, ForceMode.Impulse);
+            m_isJumping = true;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            m_isJumping = false;
+        }
     }
 
 }
