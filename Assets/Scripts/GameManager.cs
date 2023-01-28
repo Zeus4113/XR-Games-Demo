@@ -14,14 +14,17 @@ public class GameManager : MonoBehaviour
     private int collectedTally;
     private bool m_gameOver;
 
-    public delegate void GameEnd();
+    public delegate void GameEnd(bool isTrue);
     public static event GameEnd FailedState;
 
     void Start()
     {
         playerReference.GetComponent<CharacterMovement>().Init();
+
+
         PickupTrigger.IncreaseScore += UpdateScore;
-        GameEndTrigger.CompleteState += GameComplete;
+        GameEndTrigger.CompleteState += PauseTimer;
+        PauseLevel.gamePaused += PauseTimer;
 
         m_gameOver = false;
         tickAmount = -1;
@@ -60,20 +63,27 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.25f);
         }
 
-        GameOver();
+        GameOver(true);
         yield return null;
     }
 
-    private void GameOver()
+    private void GameOver(bool isTrue)
     {
-        m_gameOver = true;
-        FailedState?.Invoke();
+        m_gameOver = isTrue;
+        FailedState?.Invoke(isTrue);
         Debug.Log("Game Over!");
         SceneManager.LoadScene("LevelFailed", LoadSceneMode.Additive);
     }
 
-    private void GameComplete()
+    private void PauseTimer(bool isTrue)
     {
-        tickAmount = 0;
+        if (isTrue)
+        {
+            tickAmount = 0;
+        }
+        else if (!isTrue)
+        {
+            tickAmount = -1;
+        }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameEndTrigger : MonoBehaviour
 {
-    public delegate void GameEnd();
+    public delegate void GameEnd(bool isTrue);
     public static event GameEnd CompleteState;
 
     private void OnTriggerEnter(Collider other)
@@ -18,7 +18,7 @@ public class GameEndTrigger : MonoBehaviour
 
     void EndGame()
     {
-        CompleteState?.Invoke();
+        CompleteState?.Invoke(true);
         SceneManager.LoadScene("LevelComplete", LoadSceneMode.Additive);
     }
 }

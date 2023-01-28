@@ -6,21 +6,26 @@ public class CharacterMovement : MonoBehaviour
 {
     [SerializeField] private float m_movementSpeed;
     [SerializeField] private float m_jumpForce;
+    [SerializeField] private GameObject m_meshRender;
 
     private GameObject m_cameraHolder;
     private bool m_disableInput;
     private Rigidbody m_rigidbody;
     private bool m_isJumping;
+    
 
 
     public void Init()
     {
+        // Assigning Values
         this.GetComponentInChildren<CameraHolder>().Init();
-
+        m_disableInput = false;
         m_rigidbody = GetComponent<Rigidbody>();
+
+        // Event Binding
         GameManager.FailedState += DisableMovement;
         GameEndTrigger.CompleteState += DisableMovement;
-        m_disableInput = false;
+        PauseLevel.gamePaused += DisableMovement;
     }
 
     public void Run()
@@ -42,11 +47,23 @@ public class CharacterMovement : MonoBehaviour
         Vector3 movement = new Vector3(verticalMovement, 0, -horizontalMovement);
 
         this.transform.position += movement * m_movementSpeed * Time.deltaTime;
+
+        if(movement.magnitude > 0.15f)
+        {
+            m_meshRender.transform.LookAt(movement + this.transform.position);
+        }
     }
 
-    public void DisableMovement()
+    public void DisableMovement(bool isTrue)
     {
-        m_disableInput = true;
+        if (isTrue)
+        {
+            m_disableInput = true;
+        }
+        else if (!isTrue)
+        {
+            m_disableInput = false;
+        }
     }
 
     public void Jump()
