@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         m_gameOver = false;
         tickAmount = -1;
         collectedTally = 0;
-        UpdateScore(35);
+        UpdateScore(15);
         StartCoroutine(TickScore());
     }
 

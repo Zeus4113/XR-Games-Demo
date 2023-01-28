@@ -22,12 +22,12 @@ public class EscapeDoor : MonoBehaviour
 
     IEnumerator DoorOpen()
     {
-        float myTime = 200f;
+        float myTime = 400f;
         while(myTime > 0)
         {
             myDoor.transform.Translate(0, -0.01f, 0);
             myTime--;
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.005f);
         }
 
         yield return null;
