@@ -4,20 +4,38 @@ using UnityEngine;
 
 public class EscapeDoor : MonoBehaviour
 {
-    [SerializeField] bool isPlayerPresent;
-    [SerializeField] bool isLocked;
-    [SerializeField] GameObject myDoor;
-    [SerializeField] int collectedTally;
+    [SerializeField] GameObject m_myDoor;
+    [SerializeField] int m_collectedTally;
+    [SerializeField] int m_requiredTally;
+    [SerializeField] GameObject[] m_doorLights;
+    [SerializeField] Material m_greenLight;
 
-    private void Start()
+    public void Init()
     {
-        collectedTally = 0;
-        PickupTrigger.IncreaseScore += TallyPickups;
+        m_collectedTally = 0;
+        PickupTrigger.IncreaseKeycard += TallyPickups;
     }
 
     void TallyPickups(int increment)
     {
-        collectedTally++;
+        if(m_doorLights[m_collectedTally]  != null)
+        {
+            Renderer myRenderer = m_doorLights[m_collectedTally].GetComponent<Renderer>();
+            myRenderer.material = m_greenLight;
+            m_collectedTally += increment;
+
+            if(m_collectedTally > m_doorLights.Length)
+            {
+                m_collectedTally = 0;
+            }
+
+            Debug.Log(m_collectedTally);
+        }
+
+        if(m_collectedTally >= m_requiredTally)
+        {
+            StartCoroutine(DoorOpen());
+        }
     }
 
     IEnumerator DoorOpen()
@@ -25,22 +43,11 @@ public class EscapeDoor : MonoBehaviour
         float myTime = 400f;
         while(myTime > 0)
         {
-            myDoor.transform.Translate(0, -0.01f, 0);
+            m_myDoor.transform.Translate(0, -0.01f, 0);
             myTime--;
             yield return new WaitForSeconds(0.005f);
         }
 
         yield return null;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            if(collectedTally >= 5)
-            {
-                StartCoroutine(DoorOpen());
-            }
-        }
     }
 }

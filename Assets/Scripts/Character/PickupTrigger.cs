@@ -7,24 +7,22 @@ public class PickupTrigger : MonoBehaviour
 
     public delegate void UpdateScore(int score);
     public static event UpdateScore IncreaseScore;
-
-    public void Init()
-    {
-
-    }
-
-    public void Run()
-    {
-
-    }
+    public static event UpdateScore IncreaseKeycard;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject != null)
+        if(other.gameObject.GetComponent<Pickup>() != null)
         {
-            if (other.gameObject.CompareTag("Pickup"))
+            if (!other.gameObject.GetComponent<Pickup>().IsCollected)
             {
-                IncreaseScore(other.gameObject.GetComponent<Pickup>().GetPickedUp());
+                if (other.gameObject.CompareTag("Pickup"))
+                {
+                    IncreaseScore(other.gameObject.GetComponent<Pickup>().GetPickedUp());
+                }
+                else if (other.gameObject.CompareTag("Keycard"))
+                {
+                    IncreaseKeycard(other.gameObject.GetComponent<Pickup>().GetPickedUp());
+                }
             }
         } 
     }

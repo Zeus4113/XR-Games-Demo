@@ -48,10 +48,13 @@ public class CharacterMovement : MonoBehaviour
 
         this.transform.position += movement * m_movementSpeed * Time.deltaTime;
 
-        if(movement.magnitude > 0.15f)
+        Vector3 targetDirection = movement - this.transform.position;
+
+        if (movement != Vector3.zero)
         {
-            m_meshRender.transform.LookAt(movement + this.transform.position);
+            m_meshRender.transform.rotation = Quaternion.Slerp(m_meshRender.transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * 40f);
         }
+        // m_meshRender.transform.LookAt(movement + this.transform.position);
     }
 
     public void DisableMovement(bool isTrue)

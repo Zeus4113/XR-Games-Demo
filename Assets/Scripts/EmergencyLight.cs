@@ -11,7 +11,7 @@ public class EmergencyLight : MonoBehaviour
     private Renderer m_renderer;
     private bool m_isActive;
 
-    private void Start()
+    public void Init()
     {
         m_isActive = true;
         m_renderer = GetComponent<Renderer>();
@@ -25,7 +25,6 @@ public class EmergencyLight : MonoBehaviour
             m_pointLight.SetActive(false);
             m_renderer.material = m_unlitMaterial;
             yield return new WaitForSeconds(0.4f);
-            Debug.Log("Change Colour");
             m_pointLight.SetActive(true);
             m_renderer.material = m_litMaterial;
             yield return new WaitForSeconds(0.4f);
