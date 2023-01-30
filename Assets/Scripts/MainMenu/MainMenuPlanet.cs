@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MainMenuPlanet : MonoBehaviour
 {
-    [SerializeField] private float xAngle, yAngle, zAngle;
+    [SerializeField] private float m_xAngle, m_yAngle, m_zAngle;
 
     private void Update()
     {
-        this.transform.Rotate(xAngle, yAngle, zAngle, Space.Self); ;
+        this.transform.Rotate(m_xAngle, m_yAngle, m_zAngle, Space.Self); ;
     }
 }

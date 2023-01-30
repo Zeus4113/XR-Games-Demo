@@ -769,9 +769,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67c8452f64e81ad41b7ee077899dbe8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xAngle: 0
-  yAngle: 0
-  zAngle: 0.005
+  m_xAngle: 0
+  m_yAngle: 0
+  m_zAngle: 0.01
 --- !u!1 &786555657
 GameObject:
   m_ObjectHideFlags: 0
@@ -1373,7 +1373,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9c5d212bd1d8dc840bfb3b6d59b7e03a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2bd79e5c33a25ca429125c57cb53c5fb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

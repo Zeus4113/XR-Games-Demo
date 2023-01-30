@@ -6,14 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameObject playerReference;
-    [SerializeField] private GameObject environmentManager;
-    [SerializeField] private float currentScore;
-    [SerializeField] private GameObject scoreText;
-    [SerializeField] private TMP_Text myText;
+    [SerializeField] private GameObject m_playerReference;
+    [SerializeField] private GameObject m_environmentManager;
+    [SerializeField] private float m_currentScore;
+    [SerializeField] private GameObject m_scoreText;
+    [SerializeField] private TMP_Text m_myText;
 
 
-    private int tickAmount;
+    private int m_tickAmount;
     private bool m_gameOver;
 
     public delegate void GameEnd(bool isTrue);
@@ -21,25 +21,32 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        playerReference.GetComponent<CharacterMovement>().Init();
-        environmentManager.GetComponent<EnvironmentManager>().Init();
+        Init();
+    }
+    public void Init()
+    {
+        // Init Chain
+        m_playerReference.GetComponent<CharacterMovement>().Init();
+        m_environmentManager.GetComponent<EnvironmentManager>().Init();
 
+        // Event Binding
         PickupTrigger.IncreaseScore += UpdateScore;
         GameEndTrigger.CompleteState += PauseTimer;
         PauseLevel.gamePaused += PauseTimer;
 
-        myText = scoreText.GetComponentInChildren<TMP_Text>();
-
-        currentScore = 0;
+        // Value Assignment
+        m_myText = m_scoreText.GetComponentInChildren<TMP_Text>();
+        m_currentScore = 0;
         m_gameOver = false;
-        tickAmount = -1;
+        m_tickAmount = -1;
+
         UpdateScore(15);
         StartCoroutine(TickScore());
     }
 
     void Update()
     {
-        playerReference.GetComponent<CharacterMovement>().Run();
+        m_playerReference.GetComponent<CharacterMovement>().Run();
 
     }
 
@@ -47,23 +54,16 @@ public class GameManager : MonoBehaviour
     {
         if (!m_gameOver)
         {
-            currentScore += score;
-            myText.text = "O2 Remaining: " + currentScore.ToString();
+            m_currentScore += score;
+            m_myText.text = "O2 Remaining: " + m_currentScore.ToString();
         }
-    }
-
-    void ResetScore()
-    {
-        currentScore = 15;
-        m_gameOver = false;
-
     }
 
     private IEnumerator TickScore()
     {
-        while(currentScore > 0)
+        while(m_currentScore > 0)
         {
-            UpdateScore(tickAmount);
+            UpdateScore(m_tickAmount);
             yield return new WaitForSeconds(0.25f);
         }
 
@@ -84,11 +84,11 @@ public class GameManager : MonoBehaviour
     {
         if (isTrue)
         {
-            tickAmount = 0;
+            m_tickAmount = 0;
         }
         else if (!isTrue)
         {
-            tickAmount = -1;
+            m_tickAmount = -1;
         }
     }
 }
