@@ -23,20 +23,15 @@ public class EscapeDoor : MonoBehaviour
             Renderer myRenderer = m_doorLights[m_collectedTally].GetComponent<Renderer>();
             myRenderer.material = m_greenLight;
             m_collectedTally += increment;
-
-
-            Debug.Log(m_collectedTally);
         }
 
         if (m_collectedTally >= m_requiredTally)
         {
-            Debug.Log("DoorOpen");
             StartCoroutine(DoorOpen());
         }
 
         if (m_collectedTally >= m_doorLights.Length)
         {
-            Debug.Log("ResetTally");
             m_collectedTally = 0;
         }
     }
